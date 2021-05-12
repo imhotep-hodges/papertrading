@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+
+{% block scripts %}
+
+<script>
+         
+  $(document).ready(function(){
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels: ['AAPL', 'AMC', 'F', 'SNAP'],
+            datasets: [{
+            label: 'Your Portfolio Value',
+            data: [260, 95, 201, 270],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+            }]
+            },
+            options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+            }
+            });
+
+            });
+</script>
+
+{% endblock scripts %}
+
+{% block content %}
+
+      
+    <div class="container">
+          
+          
+          <div class="row my-3">
+              <div class="col-md-12 col-sm-12 border border-light my-3 py-4">
+                
+                <form action='{% url 'home' %}' class='form-inline my-2 my-lg-0' method='POST'>
+                        {% csrf_token %}
+                        
+                    <input class='form-control mr-sm02' type='search' placeholder='Enter Ticker Symbol' name='ticker'>
+                    <button class='btn btn-outline-success my-2 my-sm-0' type='submit'>Search</button>
+                </form>
+                  <br/>
+                  {% if tickerSy %}
+                      {{ tickerSy }}
+                  {% endif %}
+                   <br/>
+              <div class='card text-body mx-3'>
+                  {% if api %}
+                      {% if api == "Error..." %}
+                          There was a problem with your Ticker symbol. Try again...
+                      {% else %}
+                          <h3>{{ api.companyName }}</h3>
+                          <p>Price: ${{ api.latestPrice }}</p>
+                          <p>High: {{ api.week52High }}</p>                                           
+                      {% endif %}
+                  {% endif %}           
+              </div>
+
+              
+              
+
+            </div>
+
+              
+        </div>
+        <canvas id="myChart" width="150" height="150"></canvas>
+        
+
+
+    </div>
+
+{% endblock %}
